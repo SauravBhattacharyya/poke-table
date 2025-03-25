@@ -1,0 +1,23 @@
+.searchForm {
+  flex: 1;
+  width: 50%;
+  .searchWrapper {
+    position: relative;
+    width: 100%;
+    max-width: 448px;
+    .searchInput {
+      width: 100%;
+      font-size: 18px;
+      padding-left: 20px;
+      padding-right: 100px;
+    }
+    .searchBtn {
+      color: #fff;
+      font-size: 18px;
+      position: absolute;
+      cursor: pointer;
+      top: 2px;
+      right: 0;
+    }
+  }
+}

@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
+import { Mulish } from "next/font/google";
 import "./globals.scss";
 import StoreProvider from "./StoreProvider";
+
+const mulish = Mulish({
+  subsets: ["latin"],
+  weight: ["200", "300", "400", "500", "600", "700", "800", "900", "1000"],
+  variable: "--font-mulish",
+});
 
 export const metadata: Metadata = {
   title: "Pokemon Table",
@@ -14,7 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased`}>
+      <body
+        className={`${mulish.variable} antialiased min-h-screen bg-gray-100 container mx-auto px-4 sm:px-6 lg:px-8 py-4`}
+      >
         <StoreProvider>{children}</StoreProvider>
       </body>
     </html>
