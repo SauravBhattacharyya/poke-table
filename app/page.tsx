@@ -104,6 +104,7 @@ export default function Home() {
             <div>
               <PokemonTable pokemons={pokemons} />
               <Pagination
+                searchVal={searchVal}
                 limit={limit}
                 offset={offset}
                 loading={loading}

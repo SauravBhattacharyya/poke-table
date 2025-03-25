@@ -55,6 +55,7 @@ export interface DropdownComponentProps {
 }
 
 export interface PaginationProps {
+  searchVal: string;
   limit: number;
   offset: number;
   loading: boolean;
