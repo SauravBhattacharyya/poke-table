@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Poké Table Project
 
-## Getting Started
+This is a Next.js project that displays a table of Pokémon with various functionalities like filtering, pagination, and detailed views.
 
-First, run the development server:
+Features
+• Fetch and display Pokémon from the PokéAPI
+• Search Pokémon by name
+• Filter Pokémon by type
+• Paginate through the Pokémon list
+• View detailed information about each Pokémon
+• Responsive and visually appealing UI following the Pokémon theme
 
-```bash
+Getting Started
+
+Prerequisites
+
+Ensure you have the following installed:
+• Node.js (Latest LTS recommended)
+• npm or yarn
+
+Installation
+
+Clone the repository and install dependencies:
+
+# Clone the repo
+
+git clone https://github.com/your-repo/poke-table.git
+cd poke-table
+
+# Install dependencies
+
+npm install
+
+# or
+
+yarn install
+
+Running the Development Server
+
 npm run dev
+
 # or
+
 yarn dev
+
+Open http://localhost:3000 to view the project in the browser.
+
+Project Structure
+
+app/
+├── layout.tsx # Main layout component
+├── page.tsx # Home page displaying the Pokémon table
+├── pokemon/
+│ ├── [id]/
+│ │ ├── page.tsx # Dynamic route for Pokémon details
+lib/
+├── hooks.ts # Redux hooks
+├── store.ts # Redux store setup
+├── features/
+│ ├── pokemonSlice.ts # Redux slice for managing Pokémon state
+components/
+├── Pagination.tsx # Pagination component
+├── PokemonTable.tsx # Table displaying Pokémon list
+├── PokemonDetails.tsx # Component for showing Pokémon details
+
+API Usage
+
+This project fetches data from the PokéAPI:
+• GET /pokemon?limit={limit}&offset={offset} - Fetch all Pokémon with pagination
+• GET /pokemon/{id} - Fetch detailed data of a specific Pokémon
+• GET /type/{type} - Fetch Pokémon by type
+
+Testing
+
+This project uses Jest and React Testing Library for testing.
+
+Running Tests
+
+npm run test
+
 # or
-pnpm dev
+
+yarn test
+
 # or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+pnpm test
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+You can deploy this project on Vercel:
 
-## Learn More
+npm run build
+npm run start
 
-To learn more about Next.js, take a look at the following resources:
+Or deploy it directly via the Vercel platform.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is open-source and available under the MIT License.
