@@ -24,16 +24,20 @@ export default function Home() {
       <h1 className="text-5xl text-center">Find Your Favorite Pokémon</h1>
       {loading ? (
         <Loader />
-      ) : error ? (
-        <p className="text-center text-red-500">Failed to load Pokémon!</p>
       ) : (
         <section className="my-5">
           <div>
             <SearchComponent handlePokemonSearch={handlePokemonSearch} />
             <DropdownComponent />
           </div>
-          <PokemonTable pokemons={pokemons} />
-          <Pagination />
+          {error ? (
+            <p className="text-center text-red-500">Failed to load Pokémon!</p>
+          ) : (
+            <div>
+              <PokemonTable pokemons={pokemons} />
+              <Pagination />
+            </div>
+          )}
         </section>
       )}
     </main>

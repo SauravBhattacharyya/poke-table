@@ -67,7 +67,7 @@ const pokemonSlice = createSlice({
       });
     builder
       .addCase(searchPokemon.fulfilled, (state, action) => {
-        state.singlePokemon = action.payload;
+        state.pokemons = [action.payload];
         state.loading = false;
         state.error = null;
       })
