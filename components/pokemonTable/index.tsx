@@ -3,6 +3,7 @@ import styles from "./styles.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function PokemonTable({ pokemons }: { pokemons: Pokemon[] }) {
   return (
@@ -48,12 +49,12 @@ export default function PokemonTable({ pokemons }: { pokemons: Pokemon[] }) {
                   ))}
                 </td>
                 <td className="px-4 py-3">
-                  {/* <a
-                  href={`/pokemon/${pokemon.id}`}
-                  className="text-blue-500 hover:underline"
-                > */}
-                  <FontAwesomeIcon icon={faEye} className="text-red-500" />
-                  {/* </a> */}
+                  <Link
+                    href={`/pokemon/${pokemon.id}`}
+                    className="text-blue-500 hover:underline"
+                  >
+                    <FontAwesomeIcon icon={faEye} className="text-red-500" />
+                  </Link>
                 </td>
               </tr>
             ))}

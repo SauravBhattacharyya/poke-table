@@ -54,6 +54,19 @@ export const searchPokemon = createAsyncThunk(
   }
 );
 
+export const fetchPokemonDetails = createAsyncThunk(
+  "pokemon/details",
+  async (id: string | string[], { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${fetchAllPokemonApi}/${id}`);
+      return response.data;
+    } catch (error) {
+      if (error instanceof Error) return rejectWithValue(error.message);
+      return rejectWithValue("An unknown error occurred");
+    }
+  }
+);
+
 export const fetchPokemonTypes = createAsyncThunk(
   "pokemon/types",
   async (_, { rejectWithValue }) => {
@@ -174,6 +187,20 @@ const pokemonSlice = createSlice({
         state.error = action.error as string;
       })
       .addCase(fetchPokemonByType.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      });
+    builder
+      .addCase(fetchPokemonDetails.fulfilled, (state, action) => {
+        state.singlePokemon = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(fetchPokemonDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error as string;
+      })
+      .addCase(fetchPokemonDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
       });
