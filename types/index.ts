@@ -46,3 +46,12 @@ export interface DropdownComponentProps {
   pokemonTypes: PokemonTypes[];
   handleTypeSearch: (selectedType: string) => void;
 }
+
+export interface PaginationProps {
+  limit: number;
+  offset: number;
+  loading: boolean;
+  changePageSize: (selectedSize: number) => void;
+  handlePrevPage: () => void;
+  handleNextPage: () => void;
+}

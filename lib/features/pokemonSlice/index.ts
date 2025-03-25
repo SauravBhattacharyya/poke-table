@@ -22,10 +22,10 @@ export const fetchAllPokemon = createAsyncThunk(
   "pokemon/fetchAll",
   async (_, { getState, rejectWithValue }) => {
     try {
-      const { limit } = (getState() as RootState).pokemon;
+      const { limit, offset } = (getState() as RootState).pokemon;
       const urls = Array.from(
         { length: limit },
-        (_, i) => `${fetchAllPokemonApi}/${i + 1}`
+        (_, i) => `${fetchAllPokemonApi}/${offset + i + 1}`
       );
       const responses = await Promise.all(urls.map((url) => axios.get(url)));
       return responses.map((response) => response.data);
@@ -94,7 +94,18 @@ export const fetchPokemonByType = createAsyncThunk(
 const pokemonSlice = createSlice({
   name: "pokemon",
   initialState,
-  reducers: {},
+  reducers: {
+    setLimit: (state, action) => {
+      state.limit = action.payload;
+      state.offset = 0;
+    },
+    nextPage: (state) => {
+      state.offset += state.limit;
+    },
+    prevPage: (state) => {
+      state.offset = Math.max(0, state.offset - state.limit);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllPokemon.fulfilled, (state, action) => {
@@ -155,4 +166,5 @@ const pokemonSlice = createSlice({
   },
 });
 
+export const { setLimit, nextPage, prevPage } = pokemonSlice.actions;
 export default pokemonSlice.reducer;

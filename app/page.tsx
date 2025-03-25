@@ -8,16 +8,19 @@ import {
   fetchAllPokemon,
   fetchPokemonByType,
   fetchPokemonTypes,
+  nextPage,
+  prevPage,
   searchPokemon,
+  setLimit,
 } from "@/lib/features/pokemonSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { useEffect } from "react";
 
 export default function Home() {
   const dispatch = useAppDispatch();
-  const { pokemonTypes, pokemons, error, loading } = useAppSelector(
-    (state) => state.pokemon
-  );
+
+  const { pokemonTypes, offset, pokemons, error, loading, limit } =
+    useAppSelector((state) => state.pokemon);
 
   useEffect(() => {
     dispatch(fetchAllPokemon());
@@ -30,6 +33,23 @@ export default function Home() {
   const handleTypeSearch = (selectedType: string) => {
     if (selectedType === "all") dispatch(fetchAllPokemon());
     else dispatch(fetchPokemonByType(selectedType));
+  };
+
+  const changePageSize = (selectedSize: number) => {
+    dispatch(setLimit(selectedSize));
+    dispatch(fetchAllPokemon());
+  };
+
+  const handleNextPage = () => {
+    dispatch(nextPage());
+    dispatch(fetchAllPokemon());
+  };
+
+  const handlePrevPage = () => {
+    if (offset > 0) {
+      dispatch(prevPage());
+      dispatch(fetchAllPokemon()); // Fetch new page data
+    }
   };
 
   return (
@@ -51,7 +71,14 @@ export default function Home() {
           ) : (
             <div>
               <PokemonTable pokemons={pokemons} />
-              <Pagination />
+              <Pagination
+                limit={limit}
+                offset={offset}
+                loading={loading}
+                handleNextPage={handleNextPage}
+                handlePrevPage={handlePrevPage}
+                changePageSize={changePageSize}
+              />
             </div>
           )}
         </section>
