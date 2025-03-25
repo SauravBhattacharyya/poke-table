@@ -1,4 +1,8 @@
-import { fetchAllPokemonApi, searchPokemonApi } from "@/endpoints";
+import {
+  fetchAllPokemonApi,
+  pokemonTypesApi,
+  searchPokemonApi,
+} from "@/endpoints";
 import { RootState } from "@/lib/store";
 import { PokemonState } from "@/types";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -11,6 +15,7 @@ const initialState: PokemonState = {
   singlePokemon: null,
   limit: 20,
   offset: 0,
+  pokemonTypes: [],
 };
 
 export const fetchAllPokemon = createAsyncThunk(
@@ -39,6 +44,46 @@ export const searchPokemon = createAsyncThunk(
     try {
       const response = await axios.get(`${searchPokemonApi}/${searchVal}`);
       return response.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) return rejectWithValue(error.message);
+      return rejectWithValue("An unknown error occurred");
+    }
+  }
+);
+
+export const fetchPokemonTypes = createAsyncThunk(
+  "pokemon/types",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${pokemonTypesApi}?limit=50`);
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) return rejectWithValue(error.message);
+      return rejectWithValue("An unknown error occurred");
+    }
+  }
+);
+
+export const fetchPokemonByType = createAsyncThunk(
+  "pokemon/searchByType",
+  async (searchVal: string, { getState, rejectWithValue }) => {
+    try {
+      const { limit, offset } = (getState() as RootState).pokemon;
+      const pokemonResponse = await axios.get(
+        `${pokemonTypesApi}/${searchVal}`
+      );
+      const pokemonList: { name: string; url: string }[] =
+        pokemonResponse.data.pokemon.map(
+          (p: { pokemon: { name: string; url: string } }) => p.pokemon
+        );
+      const paginatedPokemon = pokemonList.slice(offset, offset + limit);
+      const detailedPokemon = await Promise.all(
+        paginatedPokemon.map(async (pokemon) => {
+          const detailsResponse = await axios.get(pokemon.url);
+          return detailsResponse.data;
+        })
+      );
+      return detailedPokemon;
     } catch (error: unknown) {
       if (error instanceof Error) return rejectWithValue(error.message);
       return rejectWithValue("An unknown error occurred");
@@ -76,6 +121,34 @@ const pokemonSlice = createSlice({
         state.error = action.error as string;
       })
       .addCase(searchPokemon.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      });
+    builder
+      .addCase(fetchPokemonTypes.fulfilled, (state, action) => {
+        state.pokemonTypes = action.payload.results;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(fetchPokemonTypes.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error as string;
+      })
+      .addCase(fetchPokemonTypes.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      });
+    builder
+      .addCase(fetchPokemonByType.fulfilled, (state, action) => {
+        state.pokemons = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(fetchPokemonByType.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error as string;
+      })
+      .addCase(fetchPokemonByType.pending, (state) => {
         state.loading = true;
         state.error = null;
       });

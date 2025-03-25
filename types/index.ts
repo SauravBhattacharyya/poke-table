@@ -1,3 +1,7 @@
+export type PokemonTypes = {
+  name: string;
+};
+
 type PokemonType = {
   slot: number;
   type: {
@@ -31,8 +35,14 @@ export interface PokemonState {
   error: string | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   singlePokemon: any | null;
+  pokemonTypes: PokemonTypes[];
 }
 
 export interface SearchComponentProps {
   handlePokemonSearch: (searchVal: string) => void;
+}
+
+export interface DropdownComponentProps {
+  pokemonTypes: PokemonTypes[];
+  handleTypeSearch: (selectedType: string) => void;
 }

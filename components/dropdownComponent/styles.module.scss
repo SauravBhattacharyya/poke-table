@@ -1,0 +1,15 @@
+.selectWrapper {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+  width: 50%;
+  .selectFilter {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    max-width: 448px;
+    .selectOption {
+      text-transform: capitalize !important;
+    }
+  }
+}
