@@ -1,3 +1,5 @@
+import { ChangeEvent } from "react";
+
 export type PokemonTypes = {
   name: string;
 };
@@ -36,13 +38,18 @@ export interface PokemonState {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   singlePokemon: any | null;
   pokemonTypes: PokemonTypes[];
+  searchVal: string;
+  selectedType: string;
 }
 
 export interface SearchComponentProps {
-  handlePokemonSearch: (searchVal: string) => void;
+  searchVal: string;
+  handlePokemonSearch: () => void;
+  handleSearchTextChange: (arg1: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface DropdownComponentProps {
+  selectedType: string;
   pokemonTypes: PokemonTypes[];
   handleTypeSearch: (selectedType: string) => void;
 }

@@ -16,6 +16,8 @@ const initialState: PokemonState = {
   limit: 20,
   offset: 0,
   pokemonTypes: [],
+  searchVal: "",
+  selectedType: "all",
 };
 
 export const fetchAllPokemon = createAsyncThunk(
@@ -40,8 +42,9 @@ export const fetchAllPokemon = createAsyncThunk(
 
 export const searchPokemon = createAsyncThunk(
   "pokemon/search",
-  async (searchVal: string, { rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
     try {
+      const { searchVal } = (getState() as RootState).pokemon;
       const response = await axios.get(`${searchPokemonApi}/${searchVal}`);
       return response.data;
     } catch (error: unknown) {
@@ -105,6 +108,16 @@ const pokemonSlice = createSlice({
     prevPage: (state) => {
       state.offset = Math.max(0, state.offset - state.limit);
     },
+    setSearchVal: (state, action) => {
+      state.searchVal = action.payload;
+    },
+    setSelectedType: (state, action) => {
+      state.selectedType = action.payload;
+      state.searchVal = "";
+    },
+    setOffset: (state, action) => {
+      state.offset = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -124,6 +137,7 @@ const pokemonSlice = createSlice({
     builder
       .addCase(searchPokemon.fulfilled, (state, action) => {
         state.pokemons = [action.payload];
+        state.selectedType = "all";
         state.loading = false;
         state.error = null;
       })
@@ -166,5 +180,12 @@ const pokemonSlice = createSlice({
   },
 });
 
-export const { setLimit, nextPage, prevPage } = pokemonSlice.actions;
+export const {
+  setLimit,
+  nextPage,
+  prevPage,
+  setSearchVal,
+  setSelectedType,
+  setOffset,
+} = pokemonSlice.actions;
 export default pokemonSlice.reducer;

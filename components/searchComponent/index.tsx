@@ -1,25 +1,21 @@
 "use client";
-import { ChangeEvent, FormEvent, useState } from "react";
 import styles from "./styles.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { SearchComponentProps } from "@/types";
+import { FormEvent } from "react";
 
 export default function SearchComponent({
   handlePokemonSearch,
+  handleSearchTextChange,
+  searchVal,
 }: SearchComponentProps) {
-  const [searchVal, setSearchVal] = useState<string>("");
-
-  const handleSearchTextChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setSearchVal(e.target.value);
-
-  const handlePokemonSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handlePokemonSearch(searchVal);
+    handlePokemonSearch();
   };
-
   return (
-    <form className={styles.searchForm} onSubmit={handlePokemonSubmit}>
+    <form className={styles.searchForm} onSubmit={handleFormSubmit}>
       <div className={styles.searchWrapper}>
         <input
           type="text"

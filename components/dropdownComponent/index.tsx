@@ -1,18 +1,15 @@
 "use client";
 import { DropdownComponentProps } from "@/types";
 import styles from "./styles.module.scss";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 
 export default function DropdownComponent({
+  selectedType,
   pokemonTypes,
   handleTypeSearch,
 }: DropdownComponentProps) {
-  const [selectedType, setSelectedType] = useState("all");
-
-  const handleSelectedType = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedType(e.target.value);
+  const handleSelectedType = (e: ChangeEvent<HTMLSelectElement>) =>
     handleTypeSearch(e.target.value);
-  };
 
   return (
     <div className={styles.selectWrapper}>

@@ -12,45 +12,72 @@ import {
   prevPage,
   searchPokemon,
   setLimit,
+  setOffset,
+  setSearchVal,
+  setSelectedType,
 } from "@/lib/features/pokemonSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { useEffect } from "react";
+import { ChangeEvent, useEffect } from "react";
 
 export default function Home() {
   const dispatch = useAppDispatch();
 
-  const { pokemonTypes, offset, pokemons, error, loading, limit } =
-    useAppSelector((state) => state.pokemon);
+  const {
+    pokemonTypes,
+    offset,
+    pokemons,
+    error,
+    loading,
+    limit,
+    searchVal,
+    selectedType,
+  } = useAppSelector((state) => state.pokemon);
 
   useEffect(() => {
     dispatch(fetchAllPokemon());
     dispatch(fetchPokemonTypes());
   }, [dispatch]);
 
-  const handlePokemonSearch = (searchVal: string) =>
-    dispatch(searchPokemon(searchVal));
+  const handlePokemonSearch = () => dispatch(searchPokemon());
 
-  const handleTypeSearch = (selectedType: string) => {
-    if (selectedType === "all") dispatch(fetchAllPokemon());
-    else dispatch(fetchPokemonByType(selectedType));
+  const handleTypeSearch = (val: string) => {
+    dispatch(setSelectedType(val));
+    if (val === "all") dispatch(fetchAllPokemon());
+    else dispatch(fetchPokemonByType(val));
   };
 
   const changePageSize = (selectedSize: number) => {
     dispatch(setLimit(selectedSize));
-    dispatch(fetchAllPokemon());
+    dispatch(setOffset(0));
+    if (selectedType === "all") {
+      dispatch(fetchAllPokemon());
+    } else {
+      dispatch(fetchPokemonByType(selectedType));
+    }
   };
 
   const handleNextPage = () => {
     dispatch(nextPage());
-    dispatch(fetchAllPokemon());
+    if (selectedType === "all") {
+      dispatch(fetchAllPokemon());
+    } else {
+      dispatch(fetchPokemonByType(selectedType));
+    }
   };
 
   const handlePrevPage = () => {
     if (offset > 0) {
       dispatch(prevPage());
-      dispatch(fetchAllPokemon()); // Fetch new page data
+      if (selectedType === "all") {
+        dispatch(fetchAllPokemon());
+      } else {
+        dispatch(fetchPokemonByType(selectedType));
+      }
     }
   };
+
+  const handleSearchTextChange = (e: ChangeEvent<HTMLInputElement>) =>
+    dispatch(setSearchVal(e.target.value));
 
   return (
     <main>
@@ -60,8 +87,13 @@ export default function Home() {
       ) : (
         <section className="my-5">
           <div className="flex items-center justify-between my-8">
-            <SearchComponent handlePokemonSearch={handlePokemonSearch} />
+            <SearchComponent
+              searchVal={searchVal}
+              handlePokemonSearch={handlePokemonSearch}
+              handleSearchTextChange={handleSearchTextChange}
+            />
             <DropdownComponent
+              selectedType={selectedType}
               pokemonTypes={pokemonTypes}
               handleTypeSearch={handleTypeSearch}
             />
